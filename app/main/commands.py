@@ -26,7 +26,7 @@ def generate_data():
     db.session.commit()
 
     user_names = []
-    while len(user_names) < 100:
+    while len(user_names) < 500:
         user_name = names.get_first_name()
         if user_name not in user_names:
             user_names.append(user_name)
@@ -105,7 +105,7 @@ def generate_data():
     db.session.add_all(prices)
     db.session.commit()
 
-    for _ in range(500):
+    for _ in range(10000):
         user = random.choice(users)
         price = random.choice(prices)
         count = random.randrange(1, 10)

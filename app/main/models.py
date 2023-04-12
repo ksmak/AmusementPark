@@ -1,4 +1,7 @@
+from sqlalchemy import event
+
 from app.extensions import db
+from app.connectors import RedisConnector
 
 
 class Park(db.Model):
@@ -42,3 +45,11 @@ class Ticket(db.Model):
         nullable=False
     )
     count = db.Column(db.Integer, nullable=False, default=1)
+
+
+@event.listens_for(Ticket, "after_insert")
+def delete_redis_keys(mapper, connection, target):
+    print("Event run.")
+    r_connect = RedisConnector()
+    r_connect.delete('report_by_park')
+    r_connect.delete('report_by_attraction')

@@ -1,7 +1,7 @@
 from flask import Flask
 
 from config import Config
-from app.extensions import db, migrate, jwt, ma
+from app.extensions import db, migrate, jwt, ma, rc
 
 
 def create_app(config_class=Config):
@@ -12,6 +12,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     jwt.init_app(app)
     ma.init_app(app)
+    rc.init_app(app)
 
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
