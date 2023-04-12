@@ -1,7 +1,6 @@
-from marshmallow import Schema, fields
+from app.extensions import ma
 
 
-class UserSchema(Schema):
-    id = fields.Integer(dump_only=True)
-    username = fields.String(required=True)
-    password = fields.String(required=True)
+class UserSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'username')

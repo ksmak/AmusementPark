@@ -17,6 +17,20 @@ import names
 
 @bp.cli.command('generate-data')
 def generate_data():
+
+    db.session.query(User).delete()
+    db.session.query(Ticket).delete()
+    db.session.query(Price).delete()
+    db.session.query(Attraction).delete()
+    db.session.query(Park).delete()
+    db.session.commit()
+
+    user_names = []
+    while len(user_names) < 100:
+        user_name = names.get_first_name()
+        if user_name not in user_names:
+            user_names.append(user_name)
+
     park_names = (
         'Парк Первого Президента РК',
         'ЦПКиО им. Горького',
@@ -24,6 +38,7 @@ def generate_data():
         'Парк Фемели',
         'Парк фонда Первого Президента',
     )
+
     attraction_names = (
         'Карусель лошадки',
         'Колесо обозрения',
@@ -39,6 +54,12 @@ def generate_data():
         'Детский аттракцион Экскаватор',
     )
 
+    price_values = (
+        150, 200, 300, 400, 500,
+        600, 700, 800, 1000, 1200,
+        1500, 2000, 2500, 3000, 3500
+    )
+
     users = []
     parks = []
     attractions = []
@@ -46,19 +67,22 @@ def generate_data():
     tickets = []
 
     pas = generate_password_hash('12345')
-    for _ in range(100):
+    for user_name in user_names:
         user = User(
-            username=names.get_first_name(),
+            username=user_name,
             password=pas
         )
-        db.session.add(user)
-        db.session.commit()
+        users.append(user)
+
+    db.session.add_all(users)
+    db.session.commit()
 
     for park_name in park_names:
         park = Park(
             name=park_name
         )
         parks.append(park)
+
     db.session.add_all(parks)
     db.session.commit()
 
@@ -75,7 +99,7 @@ def generate_data():
             price = Price(
                 park=park,
                 attraction=attr,
-                price=random.randrange(250, 5000),
+                price=random.choice(price_values)
             )
             prices.append(price)
     db.session.add_all(prices)
@@ -83,7 +107,7 @@ def generate_data():
 
     for _ in range(500):
         user = random.choice(users)
-        price = random.choice(price)
+        price = random.choice(prices)
         count = random.randrange(1, 10)
         ticket = Ticket(
             user=user,
