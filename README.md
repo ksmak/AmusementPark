@@ -11,4 +11,5 @@
 <p>flask db init                           - инициализация базы данных</p>
 <p>flask db migrate -m "Initial migrate"   - начальная точка миграции (аналогично makemigrations в django)</p>
 <p>flask db upgrade                        - изменение базы данных (аналогично migrate в django)</p>
+<p>flask main generate-data                - генерация случайных данных для тестирования</p>
 <p>flask run                               - запуск приложения</p>
