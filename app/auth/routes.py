@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.auth import bp
 from app.extensions import db
-from app.models.user import User
+from .models import User
 
 
 @bp.route('/register', methods=['POST'])
@@ -48,10 +48,20 @@ def register():
 def login():
     username = request.json.get("username", None)
     password = request.json.get("password", None)
+    error = None
+
+    if not username:
+        error.append("Username is required.")
+    elif not password:
+        error.append("Password is required.")
+
+    if error:
+        return jsonify({
+            'result': 'error',
+            'errors': error
+        }), 401
 
     user = User.query.filter_by(username=username).first()
-
-    print(user.password)
 
     if (not user) or (user.username != username) or \
        (not check_password_hash(user.password, password)):
